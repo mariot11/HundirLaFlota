@@ -22,5 +22,10 @@ class Barco:
             if self.vida > 0:
                 return ResultadoDisparo.TOCADO
             elif self.vida == 0:
-                return ResultadoDisparo.HUNDIDO        
+                return ResultadoDisparo.HUNDIDO
+
+    def esta_hundido(self):
+        if self.vida == 0:
+            return True
+        return False        
         
