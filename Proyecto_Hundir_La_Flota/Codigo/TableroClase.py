@@ -22,10 +22,11 @@ class Tablero:
 
         pass
     
-    def colocar_barcos(self):
+    def colocar_barcos(self, index:int = 0):
         # recorre la lista de barcos e intenta colocarlos en el tablero de forma aleatoria
-        for barco in self.lista_barcos:
-            self.randomizar_posicion_barco(barco)
+        for index in range(index, len(self.lista_barcos)):
+            self.randomizar_posicion_barco(self.lista_barcos[index])
+        return True
 
     def randomizar_posicion_barco(self, objeto_barco:object):
         # variable de parada del bucle
@@ -52,6 +53,8 @@ class Tablero:
                 else:
                     # Si no ha podido colocar el barco en esa orientación, la elimina del pool de orientaciones y vuelve a comprobar con otra
                     orientaciones.remove(orientacion)
+        
+        return colocado
 
     
     def intentar_colocar_barco(self, objeto_barco:object, fila:int, colum:int, orientacion:str):
