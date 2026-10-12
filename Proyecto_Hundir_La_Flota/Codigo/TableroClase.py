@@ -171,7 +171,10 @@ class Tablero:
         return has_ganado
 
     def print_tablero(self):
-        print(self.matriz)
+        print("\nTablero del jugador:", end= "\n")
+        print(np.where(self.matriz == "~", " ", self.matriz))
+        print("----------------------------------------------")
 
     def print_tablero_enemigo(self):
+        print("\nTablero del rival:", end= "\n")
         print(np.where((self.matriz == "~") | (self.matriz == "O"), " ", self.matriz))

@@ -3,7 +3,9 @@ import BarcoClase as bc
 
 #  Bucle de juego
 while True:
-    continuar = input("introduce 'continuar' si quieres seguir, cualquier otro input terminará el juego.")
+    print("introduce 'continuar' si quieres seguir, cualquier otro input terminará el juego.")
+    continuar = input(">> ")
+    
     if continuar != "continuar":
         break
     tablero_rival = tc.Tablero()
@@ -25,7 +27,11 @@ while True:
 
         # Mientras no hayamos colocado el barco el bucle debe seguir ejecutándose
         while barco_colocado != True:
-            coordenadas_input = input(f"Introduce las coordenadas del barco de longitud {barco.longitud} (del 0 al 9) y la orienciación (N,S,E,O) separado por comas 'fila,columna,orientación', si no introduces nada se calulará aleatoriamente la posición. Escribe aleatorio si quieres que se coloquen todos los barcos de forma aleatoria: ")
+            print(f"Introduce las coordenadas del barco de longitud {barco.longitud} (del 0 al 9) y la orientación (N,S,E,O)\n"
+                    "separado por comas 'fila,columna,orientación', si no introduces nada se calculará aleatoriamente la posición.\n"
+                    "Escribe aleatorio si quieres que se coloquen todos los barcos de forma aleatoria.")
+
+            coordenadas_input = input(">> ")
 
             # Si el usuario escribe aleatorio, se deben colocar todos los barcos automáticamente de una
             if coordenadas_input == "aleatorio":
@@ -40,7 +46,7 @@ while True:
 
             # Si no se han separado bien las coordenadas por comas se avisa
             elif coordenadas_input.count(",") != 2:
-                print("Error de formato, recuerda que tienes que separar los distintos valores por ','")
+                print("Error de formato, recuerda que tienes que separar los distintos valores por ','", end = "\n\n")
 
             else:
                 try:
@@ -59,10 +65,10 @@ while True:
                     tablero_player.print_tablero()
                 
                 except:
-                    print("Los valores introducidos no son válidos")
+                    print("Los valores introducidos no son válidos", end = "\n\n")
 
             if barco_colocado == False:
-                print("El barco no puede ser colocado en esa posición/orientación, prueba con otra")
+                print("El barco no puede ser colocado en esa posición/orientación, prueba con otra", end = "\n\n")
 
                 # try:
                 #     fila_input = int(fila_input)
