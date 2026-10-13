@@ -6,7 +6,7 @@ class Tablero:
 
     def __init__(self):
         # Esta es la matriz en la que pondremos los barcos
-        self.matriz = np.full((10, 10), ' ')
+        self.matriz = np.full((10, 10), '□')
 
         # lista para posicionar los barcos y comprobar si se ha ganado
         self.lista_barcos = np.array([bc.Barco(4), bc.Barco(3), bc.Barco(3), bc.Barco(2), bc.Barco(2), 
@@ -67,7 +67,7 @@ class Tablero:
                 if (fila >= longitud_barco-1):
                     fila_inicio =  fila-longitud_barco+1 
 
-                    if not(np.isin(["O","~"], self.matriz[fila_inicio : fila+1, colum]).any()):                       
+                    if not(np.isin(["▲","~"], self.matriz[fila_inicio : fila+1, colum]).any()):                       
                         # calcula los valores máximos y mínimos para pintar el barco y los márgenes
                         f_min, f_max = max(0, fila_inicio - 1), min(len(self.matriz), fila + 2)
                         c_min, c_max = max(0, colum - 1), min(len(self.matriz[0]), colum + 2)
@@ -76,7 +76,7 @@ class Tablero:
                         self.matriz[f_min : f_max, c_min : c_max] = "~"
 
                         # pinta el barco
-                        self.matriz[fila_inicio : fila + 1, colum] = "O"
+                        self.matriz[fila_inicio : fila + 1, colum] = "▲"
                         
                         # actualiza diccionarios
                         self.dict_indices_barcos.update({(f,colum):objeto_barco for f in range(fila_inicio, fila+1)})
@@ -88,7 +88,7 @@ class Tablero:
                 if (fila <= len(self.matriz) - longitud_barco):
                     fila_final = fila + longitud_barco
 
-                    if not(np.isin(["O","~"], self.matriz[fila : fila_final, colum]).any()):
+                    if not(np.isin(["▲","~"], self.matriz[fila : fila_final, colum]).any()):
                         # calcula los valores máximos y mínimos para pintar el barco y los márgenes
                         f_min, f_max = max(0, fila - 1), min(len(self.matriz), fila_final + 1)
                         c_min, c_max = max(0, colum - 1), min(len(self.matriz[0]), colum + 2)
@@ -97,7 +97,7 @@ class Tablero:
                         self.matriz[f_min : f_max, c_min : c_max] = "~"
 
                         # pinta el barco
-                        self.matriz[fila:fila_final,colum] = "O"
+                        self.matriz[fila:fila_final,colum] = "▲"
 
                         # actualiza diccionarios
                         self.dict_indices_barcos.update({(f,colum):objeto_barco for f in range(fila, fila_final,)})
@@ -108,7 +108,7 @@ class Tablero:
                 if colum <= len(self.matriz[0]) - longitud_barco:
                     colum_final = colum + longitud_barco
 
-                    if not np.isin(["O", "~"], self.matriz[fila, colum : colum_final]).any():
+                    if not np.isin(["▲", "~"], self.matriz[fila, colum : colum_final]).any():
                         # calcula los valores máximos y mínimos para pintar el barco y los márgenes
                         f_min, f_max = max(0, fila - 1), min(len(self.matriz), fila + 2)
                         c_min, c_max = max(0, colum - 1), min(len(self.matriz[0]), colum_final + 1)
@@ -117,7 +117,7 @@ class Tablero:
                         self.matriz[f_min : f_max, c_min : c_max] = "~"
 
                         # Pinta el barco
-                        self.matriz[fila, colum : colum_final] = "O"
+                        self.matriz[fila, colum : colum_final] = "▲"
 
                         # actualiza diccionarios
                         self.dict_indices_barcos.update({(fila, c): objeto_barco for c in range(colum, colum_final)})
@@ -128,7 +128,7 @@ class Tablero:
                 if colum >= longitud_barco - 1:
                     colum_inicio = colum - longitud_barco + 1
 
-                    if not np.isin(["O", "~"], self.matriz[fila, colum_inicio : colum + 1]).any():
+                    if not np.isin(["▲", "~"], self.matriz[fila, colum_inicio : colum + 1]).any():
                         # calcula los valores máximos y mínimos para pintar el barco y los márgenes
                         f_min, f_max = max(0, fila - 1), min(len(self.matriz), fila + 2)
                         c_min, c_max = max(0, colum_inicio - 1), min(len(self.matriz[0]), colum + 2)
@@ -137,7 +137,7 @@ class Tablero:
                         self.matriz[f_min : f_max, c_min : c_max] = "~"
 
                         # Pinta el barco
-                        self.matriz[fila, colum_inicio : colum + 1] = "O"
+                        self.matriz[fila, colum_inicio : colum + 1] = "▲"
 
                         # actualiza diccionarios
                         self.dict_indices_barcos.update({(fila, c): objeto_barco for c in range(colum_inicio, colum + 1)})
@@ -146,35 +146,71 @@ class Tablero:
             case _:
                 raise ValueError("El valor de la orientación debe ser 'N, S, E u O'")
         return colocado
+
+    def disparar_aleatoriamente(self):
+        indx_disparos = np.random.choice(len(self.lista_indices_disparos))
+        fila, colum = self.lista_indices_disparos[indx_disparos]
+        has_ganado, resultado  = self.disparar(fila, colum)
+        return(has_ganado, resultado, (fila, colum))
+
     
     def disparar(self, fila:int, colum:int):
         has_ganado = False
+        resultado = ResultadoDisparo.FALLO
         casilla = self.matriz[fila, colum]
-        if (casilla == "-") or (casilla.upper() == "X"):
-            return "ocupado"
-        elif casilla == " ":
-            self.matriz[fila, colum] = "-"
-            self.lista_indices_disparos.remove((fila,colum))
-        elif casilla == "O":
-            barco = self.indices_.get((fila, colum))
+        
+        if (casilla == "⊞") or (casilla == "◐") or (casilla == "●"):
+            raise Exception("Esta casilla ya había recibido un disparo previamente")
+            # return (has_ganado, resultado)
+        
+        elif (casilla == "□") or (casilla == "~"):
+            self.matriz[fila, colum] = "⊞"
+        
+        elif casilla == "▲":
+            barco = self.dict_indices_barcos.get((fila, colum))
             resultado = barco.restar_vida()
+            
             match resultado:
+                
                 case ResultadoDisparo.TOCADO:
-                    self.matriz[fila, colum] = "x"
+                    self.matriz[fila, colum] = "◐"
+                
                 case ResultadoDisparo.HUNDIDO:
                     lista_indices_barco = np.array(self.dict_barcos_indices.get(self.dict_indices_barcos.get((fila,colum))))
                     f,c = np.column_stack(lista_indices_barco)
-                    self.matriz[f,c] = "X"
+                    self.matriz[f,c] = "●"
                     barcos_hundidos = sum(1 for b in self.lista_barcos if b.esta_hundido())
                     if(barcos_hundidos == len(self.lista_barcos)):
                         has_ganado = True
-        return has_ganado
+        
+        self.lista_indices_disparos.remove((fila,colum))
+        return (has_ganado, resultado)
 
     def print_tablero(self):
-        print("\nTablero del jugador:", end= "\n")
-        print(np.where(self.matriz == "~", " ", self.matriz))
+        print("\nTablero del jugador:", end= "\n\n")
+        print("    0 1 2 3 4 5 6 7 8 9")
+        print("  -----------------------")
+        for fila in range(len(self.matriz)):
+            fila_limpia = str(fila) + "| "
+            for colum in range(len(self.matriz[fila])):
+                if self.matriz[fila,colum] == "~":
+                    fila_limpia += " □"
+                else:
+                    fila_limpia += (" " + self.matriz[fila,colum])
+            print(fila_limpia)
         print("----------------------------------------------")
 
     def print_tablero_enemigo(self):
-        print("\nTablero del rival:", end= "\n")
-        print(np.where((self.matriz == "~") | (self.matriz == "O"), " ", self.matriz))
+        print("\nTablero del rival:", end= "\n\n")        
+        print("    0 1 2 3 4 5 6 7 8 9")
+        print("  -----------------------")
+        for fila in range(len(self.matriz)):
+            fila_limpia = str(fila) + "| "
+            for colum in range(len(self.matriz[fila])):
+                if (self.matriz[fila,colum] == "~") or (self.matriz[fila,colum] == "▲"):
+                    fila_limpia += " □"
+                else:
+                    fila_limpia += (" " + self.matriz[fila,colum])
+            print(fila_limpia)
+
+        # print(np.where((self.matriz == "~") | (self.matriz == "▲"), "□", self.matriz))
