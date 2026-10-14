@@ -119,7 +119,7 @@ while True:
 
         print("\nTurno de disparar del enemigo: ")
         input("\nPulsa enter para continuar\n>>>")
-        gana_rival, resultado, coordenadas_disparo = tablero_player.disparar_aleatoriamente()
+        gana_rival, resultado, coordenadas_disparo = tablero_player.disparar_rival()
         print(f"El enemigo ha disparado a la casilla ({coordenadas_disparo[0]}, {coordenadas_disparo[1]}) y el resultado ha sido {resultado.name}")
         tablero_player.print_tablero()
 

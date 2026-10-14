@@ -20,6 +20,10 @@ class Tablero:
         self.dict_indices_barcos = {}
         self.dict_barcos_indices = {}
 
+        # Lista de casillas adyacentes para la IA del rival
+        self.lista_adyacentes = []
+        self.ultimo_tocado = []
+
         pass
     
     def colocar_barcos(self, index:int = 0):
@@ -151,7 +155,52 @@ class Tablero:
         indx_disparos = np.random.choice(len(self.lista_indices_disparos))
         fila, colum = self.lista_indices_disparos[indx_disparos]
         has_ganado, resultado  = self.disparar(fila, colum)
+
+        if resultado == ResultadoDisparo.TOCADO:
+            self.ultimo_tocado = [fila, colum]
+            for i in [-1, 1]:
+                if (fila +i, colum) in self.lista_indices_disparos:
+                    self.lista_adyacentes.append((fila +i, colum))
+            for j in [-1, 1]:
+                if (fila, colum + j) in self.lista_indices_disparos:
+                    self.lista_adyacentes.append((fila, colum + j))
+        
         return(has_ganado, resultado, (fila, colum))
+
+    def disparar_rival(self):
+        if len(self.lista_adyacentes) == 0:
+            has_ganado, resultado, coordenadas = self.disparar_aleatoriamente()
+            return (has_ganado, resultado, coordenadas)
+        else:
+            index = np.random.choice(range(len(self.lista_adyacentes)))
+            fila, colum = self.lista_adyacentes[index]
+            has_ganado, resultado = self.disparar(fila, colum)
+            self.lista_adyacentes.pop(index)
+            eje_barco = [0,0]
+
+            if resultado == ResultadoDisparo.HUNDIDO:
+                self.lista_adyacentes = []
+                self.ultimo_tocado = []
+
+            elif resultado == ResultadoDisparo.TOCADO:
+                eje_barco = [fila - self.ultimo_tocado[0], colum - self.ultimo_tocado[1]]
+
+            if eje_barco[0] != 0:  # Movimiento horizontal
+                self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[1] == colum]
+            elif eje_barco[1] != 0:  # Movimiento vertical
+                self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[0] == fila]
+            
+            for i in [-1, 1]:
+                nueva_fila = fila + (eje_barco[0] * i)
+                nueva_colum = colum + (eje_barco[1] * i)
+                nueva_casilla = (nueva_fila, nueva_colum)
+                
+                if nueva_casilla in self.lista_indices_disparos:
+                    if nueva_casilla not in self.lista_adyacentes:
+                        self.lista_adyacentes.append(nueva_casilla)
+            
+            self.ultimo_tocado = [fila, colum]
+            return (has_ganado, resultado, (fila, colum))
 
     
     def disparar(self, fila:int, colum:int):
@@ -212,5 +261,3 @@ class Tablero:
                 else:
                     fila_limpia += (" " + self.matriz[fila,colum])
             print(fila_limpia)
-
-        # print(np.where((self.matriz == "~") | (self.matriz == "▲"), "□", self.matriz))
