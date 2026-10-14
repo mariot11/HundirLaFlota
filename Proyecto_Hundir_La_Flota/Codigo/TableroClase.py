@@ -152,10 +152,12 @@ class Tablero:
         return colocado
 
     def disparar_aleatoriamente(self):
+        # elige una posición aleatoria de la lista de posibles coordenadas para disparar
         indx_disparos = np.random.choice(len(self.lista_indices_disparos))
         fila, colum = self.lista_indices_disparos[indx_disparos]
         has_ganado, resultado  = self.disparar(fila, colum)
 
+        #Si el resultado del disparo es un barco enemigo tocado, se actualiza la array de posiciones adyacentes
         if resultado == ResultadoDisparo.TOCADO:
             self.ultimo_tocado = [fila, colum]
             for i in [-1, 1]:
@@ -168,38 +170,47 @@ class Tablero:
         return(has_ganado, resultado, (fila, colum))
 
     def disparar_rival(self):
+        # Si no hay adyacentes (no hay un barco tocado) hacer un disparo aleatorio normal
         if len(self.lista_adyacentes) == 0:
             has_ganado, resultado, coordenadas = self.disparar_aleatoriamente()
             return (has_ganado, resultado, coordenadas)
+        # En caso contrario disparar aleatoriamente en una de las posiciones adyacentes
         else:
             index = np.random.choice(range(len(self.lista_adyacentes)))
             fila, colum = self.lista_adyacentes[index]
             has_ganado, resultado = self.disparar(fila, colum)
             self.lista_adyacentes.pop(index)
-            eje_barco = [0,0]
 
+            # Si has hundido el barco, se reinicia todo para volver a realizar disparos aleatorios normales
             if resultado == ResultadoDisparo.HUNDIDO:
                 self.lista_adyacentes = []
                 self.ultimo_tocado = []
 
+            # Si hemos vuelto a darle al barco se calcula la dirección del barco
             elif resultado == ResultadoDisparo.TOCADO:
-                eje_barco = [fila - self.ultimo_tocado[0], colum - self.ultimo_tocado[1]]
-
-            if eje_barco[0] != 0:  # Movimiento horizontal
-                self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[1] == colum]
-            elif eje_barco[1] != 0:  # Movimiento vertical
-                self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[0] == fila]
-            
-            for i in [-1, 1]:
-                nueva_fila = fila + (eje_barco[0] * i)
-                nueva_colum = colum + (eje_barco[1] * i)
-                nueva_casilla = (nueva_fila, nueva_colum)
+                diff_fila = fila - self.ultimo_tocado[0]
+                diff_colum = colum - self.ultimo_tocado[1]
                 
-                if nueva_casilla in self.lista_indices_disparos:
-                    if nueva_casilla not in self.lista_adyacentes:
-                        self.lista_adyacentes.append(nueva_casilla)
-            
-            self.ultimo_tocado = [fila, colum]
+                # Forzamos con np.sign a que el paso sea siempre -1, 0 o 1 exacto
+                eje_barco = (int(np.sign(diff_fila)), int(np.sign(diff_colum)))
+
+                if eje_barco[0] != 0:  # Movimiento horizontal
+                    self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[1] == colum]
+                elif eje_barco[1] != 0:  # Movimiento vertical
+                    self.lista_adyacentes = [pos for pos in self.lista_adyacentes if pos[0] == fila]
+
+                # Actualizar la lista de adyacentes sabiendo la orientación del barco
+                for i in [-1, 1]:
+                    nueva_fila = fila + (eje_barco[0] * i)
+                    nueva_colum = colum + (eje_barco[1] * i)
+                    nueva_casilla = (nueva_fila, nueva_colum)
+                    
+                    if nueva_casilla in self.lista_indices_disparos:
+                        if nueva_casilla not in self.lista_adyacentes:
+                            self.lista_adyacentes.append(nueva_casilla)
+                
+                self.ultimo_tocado = [fila, colum]
+                
             return (has_ganado, resultado, (fila, colum))
 
     
@@ -207,14 +218,16 @@ class Tablero:
         has_ganado = False
         resultado = ResultadoDisparo.FALLO
         casilla = self.matriz[fila, colum]
-        
+
+        #Si es una casilla a la que ya habíamos disparado, devuelve un error
         if (casilla == "⊞") or (casilla == "◐") or (casilla == "●"):
             raise Exception("Esta casilla ya había recibido un disparo previamente")
-            # return (has_ganado, resultado)
-        
+
+        #Si disparas al agua
         elif (casilla == "□") or (casilla == "~"):
             self.matriz[fila, colum] = "⊞"
-        
+
+        #Si disparas a un barco
         elif casilla == "▲":
             barco = self.dict_indices_barcos.get((fila, colum))
             resultado = barco.restar_vida()
@@ -223,7 +236,8 @@ class Tablero:
                 
                 case ResultadoDisparo.TOCADO:
                     self.matriz[fila, colum] = "◐"
-                
+
+                #Comprueba si el barco eliminado era el último para terminar el juego
                 case ResultadoDisparo.HUNDIDO:
                     lista_indices_barco = np.array(self.dict_barcos_indices.get(self.dict_indices_barcos.get((fila,colum))))
                     f,c = np.column_stack(lista_indices_barco)

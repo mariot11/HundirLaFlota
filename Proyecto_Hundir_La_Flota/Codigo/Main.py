@@ -18,7 +18,7 @@ def separar_coordenadas(texto_input, num_elementos):
 
 #  Bucle de juego
 while True:
-    print("introduce 'continuar' si quieres seguir, cualquier otro input terminará el juego.")
+    print("\nIntroduce 'continuar' si quieres seguir, cualquier otro input terminará el juego.")
     continuar = input(">> ")
 
     if continuar != "continuar":
@@ -117,6 +117,7 @@ while True:
         if gana_jugador:
             break
 
+        # Gestón del disparo del rival
         print("\nTurno de disparar del enemigo: ")
         input("\nPulsa enter para continuar\n>>>")
         gana_rival, resultado, coordenadas_disparo = tablero_player.disparar_rival()
@@ -124,8 +125,7 @@ while True:
         tablero_player.print_tablero()
 
     if gana_jugador:
-        print("\nEnhorabuena, has ganado")
+        print("\n¡ENHORABUENA, HAS GANADO!\n")
     else:
-        print("\nLos siento, has perdido")
-    print("Adiós")
+        print("\n¡LO SIENTO, HAS PERDIDO!\n")
 
