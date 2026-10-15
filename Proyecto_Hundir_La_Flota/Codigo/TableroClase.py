@@ -169,7 +169,7 @@ class Tablero:
         
         return(has_ganado, resultado, (fila, colum))
 
-    def disparar_rival(self):
+    def disparar_enemigo(self):
         # Si no hay adyacentes (no hay un barco tocado) hacer un disparo aleatorio normal
         if len(self.lista_adyacentes) == 0:
             has_ganado, resultado, coordenadas = self.disparar_aleatoriamente()
@@ -216,7 +216,7 @@ class Tablero:
     
     def disparar(self, fila:int, colum:int):
         has_ganado = False
-        resultado = ResultadoDisparo.FALLO
+        resultado = ResultadoDisparo.ERROR
         casilla = self.matriz[fila, colum]
 
         #Si es una casilla a la que ya habíamos disparado, devuelve un error

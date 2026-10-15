@@ -23,8 +23,8 @@ while True:
 
     if continuar != "continuar":
         break
-    tablero_rival = tc.Tablero()
-    tablero_rival.colocar_barcos()
+    tablero_enemigo = tc.Tablero()
+    tablero_enemigo.colocar_barcos()
 
     tablero_player = tc.Tablero()
     todos_colocados = False
@@ -79,10 +79,10 @@ while True:
 
     # Una vez terminado el bucle de colocación de barcos empieza el bucle de disparos
     gana_jugador = False
-    gana_rival = False
+    gana_enemigo = False
 
     # Mientras nadie gane seguir disparando
-    while (not gana_jugador) and (not gana_rival):
+    while (not gana_jugador) and (not gana_enemigo):
         disparo_player = False
         while not disparo_player:
             print("Introduce las coordenadas para el disparo (del 0 al 9) separando por comas 'fila,columna'. Si no introduces nada " \
@@ -91,9 +91,9 @@ while True:
 
             # Si no introduces nada, disparar aleatoriamente
             if coordenadas_input_disparo == "":
-                gana_jugador, resultado, coordenadas_disparo = tablero_rival.disparar_aleatoriamente()
+                gana_jugador, resultado, coordenadas_disparo = tablero_enemigo.disparar_aleatoriamente()
                 print(f"El jugador ha disparado a la casilla ({coordenadas_disparo[0]}, {coordenadas_disparo[1]}) y el resultado ha sido {resultado.name}")
-                tablero_rival.print_tablero_enemigo()
+                tablero_enemigo.print_tablero_enemigo()
                 disparo_player = True
             
             else:
@@ -103,9 +103,9 @@ while True:
                     colum_input_disparo = int(coordenadas_lista[1])
 
                     # Disparamos en las coordenadas obtenidas
-                    gana_jugador = tablero_rival.disparar(fila_input_disparo, colum_input_disparo)[0]
+                    gana_jugador = tablero_enemigo.disparar(fila_input_disparo, colum_input_disparo)[0]
                     disparo_player = True
-                    tablero_rival.print_tablero_enemigo()
+                    tablero_enemigo.print_tablero_enemigo()
                 
                 except IndexError:
                     print("Las coordenadas que introdujiste no se encuentran dentro del tablero 10x10 (tienen que ser números entre 0 y 9)")
@@ -117,10 +117,10 @@ while True:
         if gana_jugador:
             break
 
-        # Gestón del disparo del rival
+        # Gestón del disparo del enemigo
         print("\nTurno de disparar del enemigo: ")
         input("\nPulsa enter para continuar\n>>>")
-        gana_rival, resultado, coordenadas_disparo = tablero_player.disparar_rival()
+        gana_enemigo, resultado, coordenadas_disparo = tablero_player.disparar_enemigo()
         print(f"El enemigo ha disparado a la casilla ({coordenadas_disparo[0]}, {coordenadas_disparo[1]}) y el resultado ha sido {resultado.name}")
         tablero_player.print_tablero()
 

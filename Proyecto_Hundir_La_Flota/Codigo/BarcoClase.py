@@ -16,7 +16,7 @@ class Barco:
 
     def restar_vida(self):
         if self.vida == 0:
-            return ResultadoDisparo.FALLO
+            return ResultadoDisparo.ERROR
         else:
             self.vida -= 1
             if self.vida > 0:

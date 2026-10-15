@@ -4,4 +4,4 @@ class ResultadoDisparo(Enum):
     AGUA = "agua"
     TOCADO = "tocado"
     HUNDIDO = "hundido"
-    FALLO = "fallo"
+    ERROR = "error"
