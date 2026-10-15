@@ -225,6 +225,7 @@ class Tablero:
 
         #Si disparas al agua
         elif (casilla == "□") or (casilla == "~"):
+            resultado = ResultadoDisparo.AGUA
             self.matriz[fila, colum] = "⊞"
 
         #Si disparas a un barco

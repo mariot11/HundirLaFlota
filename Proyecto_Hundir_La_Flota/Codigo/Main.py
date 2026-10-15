@@ -63,8 +63,8 @@ while True:
                 try:
                     # separamos el input en diferentes variables y las limpiamos
                     coordenadas_lista = separar_coordenadas(coordenadas_input, 3)
-                    fila_input = coordenadas_lista[0]
-                    colum_input = coordenadas_lista[1]
+                    fila_input = int(coordenadas_lista[0])
+                    colum_input = int(coordenadas_lista[1])
                     orientacion_input = coordenadas_lista[2].upper()
 
                     # Intentamos colocar el barco en las coordenadas que le hemos pasado y guardamos el resultado (booleano) para saber si lo ha conseguido
@@ -103,7 +103,8 @@ while True:
                     colum_input_disparo = int(coordenadas_lista[1])
 
                     # Disparamos en las coordenadas obtenidas
-                    gana_jugador = tablero_enemigo.disparar(fila_input_disparo, colum_input_disparo)[0]
+                    gana_jugador, resultado = tablero_enemigo.disparar(fila_input_disparo, colum_input_disparo)
+                    print(f"El jugador ha disparado a la casilla ({fila_input_disparo}, {colum_input_disparo}) y el resultado ha sido {resultado.name}")
                     disparo_player = True
                     tablero_enemigo.print_tablero_enemigo()
                 
