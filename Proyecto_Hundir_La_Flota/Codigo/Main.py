@@ -98,9 +98,9 @@ while True:
         print("=" * 40)
         print("           TURNO DE ATAQUE")
         print("=" * 40)
-        tablero_enemigo.print_tablero_enemigo()
         tablero_player.print_tablero()
-
+        tablero_enemigo.print_tablero_enemigo()
+        
         disparo_player = False
         while not disparo_player:
             print("Introduce las coordenadas para el disparo (del 0 al 9) separando por comas 'fila,columna'. Si no introduces nada " \

@@ -260,7 +260,7 @@ class Tablero:
         RESET = "\033[0m"
 
         print(f"\n{AZUL}Tablero del jugador:{RESET}", end= "\n\n")
-        print(f"    {AZUL}0 1 2 3 4 5 6 7 8 9{RESET}")
+        print(f"     {AZUL}0 1 2 3 4 5 6 7 8 9{RESET}")
         print(f"  {AZUL}-----------------------{RESET}")
         
         for fila in range(len(self.matriz)):
@@ -294,7 +294,7 @@ class Tablero:
         RESET = "\033[0m"
 
         print(f"\n{ROJO}Tablero del rival:{RESET}", end= "\n\n")        
-        print(f"    {ROJO}0 1 2 3 4 5 6 7 8 9{RESET}")
+        print(f"     {ROJO}0 1 2 3 4 5 6 7 8 9{RESET}")
         print(f"  {ROJO}-----------------------{RESET}")
         
         for fila in range(len(self.matriz)):
