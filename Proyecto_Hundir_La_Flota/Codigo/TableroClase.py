@@ -251,28 +251,68 @@ class Tablero:
         return (has_ganado, resultado)
 
     def print_tablero(self):
-        print("\nTablero del jugador:", end= "\n\n")
-        print("    0 1 2 3 4 5 6 7 8 9")
-        print("  -----------------------")
+        # Códigos de color ANSI
+        AZUL = "\033[94m"
+        VERDE = "\033[92m"
+        NARANJA = "\033[93m"  # Amarillo brillante simulando naranja
+        ROJO = "\033[91m"
+        GRIS = "\033[90m"
+        RESET = "\033[0m"
+
+        print(f"\n{AZUL}Tablero del jugador:{RESET}", end= "\n\n")
+        print(f"    {AZUL}0 1 2 3 4 5 6 7 8 9{RESET}")
+        print(f"  {AZUL}-----------------------{RESET}")
+        
         for fila in range(len(self.matriz)):
-            fila_limpia = str(fila) + "| "
+            fila_limpia = f"{AZUL}{str(fila)}{RESET} | "
+            
             for colum in range(len(self.matriz[fila])):
-                if self.matriz[fila,colum] == "~":
-                    fila_limpia += " □"
+                elemento = self.matriz[fila, colum]
+                
+                if elemento == "~":
+                    fila_limpia += " □"  # Agua sin color
+                elif elemento == "▲":
+                    fila_limpia += f" {VERDE}▲{RESET}"  # Barcos en verde
+                elif elemento == "⊞":
+                    fila_limpia += f" {GRIS}⊞{RESET}"  # Fallos en gris
+                elif elemento == "◐":
+                    fila_limpia += f" {NARANJA}◐{RESET}" # Tocados en naranja
+                elif elemento == "●":
+                    fila_limpia += f" {ROJO}●{RESET}"  # Hundidos en rojo
                 else:
-                    fila_limpia += (" " + self.matriz[fila,colum])
+                    fila_limpia += f" {elemento}"
+                    
             print(fila_limpia)
-        print("----------------------------------------------")
+            
+        print(f"{AZUL}----------------------------------------------{RESET}")
 
     def print_tablero_enemigo(self):
-        print("\nTablero del rival:", end= "\n\n")        
-        print("    0 1 2 3 4 5 6 7 8 9")
-        print("  -----------------------")
+        # Códigos de color ANSI
+        ROJO = "\033[91m"
+        VERDE = "\033[92m"
+        GRIS = "\033[90m"
+        RESET = "\033[0m"
+
+        print(f"\n{ROJO}Tablero del rival:{RESET}", end= "\n\n")        
+        print(f"    {ROJO}0 1 2 3 4 5 6 7 8 9{RESET}")
+        print(f"  {ROJO}-----------------------{RESET}")
+        
         for fila in range(len(self.matriz)):
-            fila_limpia = str(fila) + "| "
+            fila_limpia = f"{ROJO}{str(fila)}{RESET} | "
+            
             for colum in range(len(self.matriz[fila])):
-                if (self.matriz[fila,colum] == "~") or (self.matriz[fila,colum] == "▲"):
+                elemento = self.matriz[fila, colum]
+                
+                # En el tablero enemigo los barcos '▲' y el agua '~' se ocultan como '□'
+                if elemento == "~" or elemento == "▲":
                     fila_limpia += " □"
+                elif elemento == "⊞":
+                    fila_limpia += f" {GRIS}⊞{RESET}"  # Fallos en gris
+                elif elemento == "◐" or elemento == "●":
+                    fila_limpia += f" {VERDE}{elemento}{RESET}"  # Tocados y hundidos en verde
                 else:
-                    fila_limpia += (" " + self.matriz[fila,colum])
+                    fila_limpia += f" {elemento}"
+                    
             print(fila_limpia)
+            
+        print(f"{ROJO}----------------------------------------------{RESET}")

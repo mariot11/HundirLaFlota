@@ -1,5 +1,7 @@
 import TableroClase as tc
 import BarcoClase as bc
+import os
+import subprocess
 
 
 def separar_coordenadas(texto_input, num_elementos):
@@ -23,6 +25,10 @@ while True:
 
     if continuar != "continuar":
         break
+
+    # Limpiamos pantalla al empezar una nueva partida
+    subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
+
     tablero_enemigo = tc.Tablero()
     tablero_enemigo.colocar_barcos()
 
@@ -52,11 +58,13 @@ while True:
             if coordenadas_input == "aleatorio":
                 tablero_player.colocar_barcos(i)
                 todos_colocados = True
+                subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
                 break
             
             # Si el usuario no introduce ningún valor, el barco correspondiente se coloca aleatoriamente 
             elif coordenadas_input == "":
                 barco_colocado = tablero_player.randomizar_posicion_barco(barco)
+                subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
                 tablero_player.print_tablero()
 
             else:
@@ -69,6 +77,7 @@ while True:
 
                     # Intentamos colocar el barco en las coordenadas que le hemos pasado y guardamos el resultado (booleano) para saber si lo ha conseguido
                     barco_colocado = tablero_player.intentar_colocar_barco(barco, fila_input, colum_input, orientacion_input)
+                    subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
                     tablero_player.print_tablero()
                 
                 except:
@@ -83,6 +92,15 @@ while True:
 
     # Mientras nadie gane seguir disparando
     while (not gana_jugador) and (not gana_enemigo):
+
+        # Al inicio de cada ronda del jugador, limpiamos y mostramos AMBOS tableros
+        subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
+        print("=" * 40)
+        print("           TURNO DE ATAQUE")
+        print("=" * 40)
+        tablero_enemigo.print_tablero_enemigo()
+        tablero_player.print_tablero()
+
         disparo_player = False
         while not disparo_player:
             print("Introduce las coordenadas para el disparo (del 0 al 9) separando por comas 'fila,columna'. Si no introduces nada " \
@@ -92,7 +110,11 @@ while True:
             # Si no introduces nada, disparar aleatoriamente
             if coordenadas_input_disparo == "":
                 gana_jugador, resultado, coordenadas_disparo = tablero_enemigo.disparar_aleatoriamente()
+                
+                # Limpiamos la pantalla y mostramos el resultado del jugador
+                subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
                 print(f"El jugador ha disparado a la casilla ({coordenadas_disparo[0]}, {coordenadas_disparo[1]}) y el resultado ha sido {resultado.name}")
+                tablero_player.print_tablero()
                 tablero_enemigo.print_tablero_enemigo()
                 disparo_player = True
             
@@ -104,9 +126,13 @@ while True:
 
                     # Disparamos en las coordenadas obtenidas
                     gana_jugador, resultado = tablero_enemigo.disparar(fila_input_disparo, colum_input_disparo)
+
+                    # Limpiamos pantalla y mostramos el tablero enemigo actualizado
+                    subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
                     print(f"El jugador ha disparado a la casilla ({fila_input_disparo}, {colum_input_disparo}) y el resultado ha sido {resultado.name}")
-                    disparo_player = True
+                    tablero_player.print_tablero()
                     tablero_enemigo.print_tablero_enemigo()
+                    disparo_player = True
                 
                 except IndexError:
                     print("Las coordenadas que introdujiste no se encuentran dentro del tablero 10x10 (tienen que ser números entre 0 y 9)")
@@ -121,9 +147,17 @@ while True:
         # Gestón del disparo del enemigo
         print("\nTurno de disparar del enemigo: ")
         input("\nPulsa enter para continuar\n>>>")
+        
         gana_enemigo, resultado, coordenadas_disparo = tablero_player.disparar_enemigo()
+
+        #Limpiamos pantalla para que se muestre limpio el resultado del enemigo y el tablero del jugador
+        subprocess.run('cls' if os.name == 'nt' else 'clear', shell=True)
         print(f"El enemigo ha disparado a la casilla ({coordenadas_disparo[0]}, {coordenadas_disparo[1]}) y el resultado ha sido {resultado.name}")
+        tablero_enemigo.print_tablero_enemigo()
         tablero_player.print_tablero()
+
+        # Pausa para leer el resultado del ataque enemigo
+        input("\nPulsa enter para continuar con tu siguiente turno >>> ")
 
     if gana_jugador:
         print("\n¡ENHORABUENA, HAS GANADO!\n")
