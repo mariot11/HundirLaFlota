@@ -100,6 +100,7 @@ while True:
         print("=" * 40)
         tablero_player.print_tablero()
         tablero_enemigo.print_tablero_enemigo()
+
         
         disparo_player = False
         while not disparo_player:

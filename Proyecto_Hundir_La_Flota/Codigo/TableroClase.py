@@ -256,7 +256,7 @@ class Tablero:
         VERDE = "\033[92m"
         NARANJA = "\033[93m"  # Amarillo brillante simulando naranja
         ROJO = "\033[91m"
-        GRIS = "\033[90m"
+        BLANCO_BRILLANTE = "\033[97m"
         RESET = "\033[0m"
 
         print(f"\n{AZUL}Tablero del jugador:{RESET}", end= "\n\n")
@@ -274,7 +274,7 @@ class Tablero:
                 elif elemento == "▲":
                     fila_limpia += f" {VERDE}▲{RESET}"  # Barcos en verde
                 elif elemento == "⊞":
-                    fila_limpia += f" {GRIS}⊞{RESET}"  # Fallos en gris
+                    fila_limpia += f" {BLANCO_BRILLANTE}⊞{RESET}"  # Fallos en gris
                 elif elemento == "◐":
                     fila_limpia += f" {NARANJA}◐{RESET}" # Tocados en naranja
                 elif elemento == "●":
@@ -290,7 +290,7 @@ class Tablero:
         # Códigos de color ANSI
         ROJO = "\033[91m"
         VERDE = "\033[92m"
-        GRIS = "\033[90m"
+        BLANCO_BRILLANTE = "\033[97m"
         RESET = "\033[0m"
 
         print(f"\n{ROJO}Tablero del rival:{RESET}", end= "\n\n")        
@@ -307,7 +307,7 @@ class Tablero:
                 if elemento == "~" or elemento == "▲":
                     fila_limpia += " □"
                 elif elemento == "⊞":
-                    fila_limpia += f" {GRIS}⊞{RESET}"  # Fallos en gris
+                    fila_limpia += f" {BLANCO_BRILLANTE}⊞{RESET}"  # Fallos en gris
                 elif elemento == "◐" or elemento == "●":
                     fila_limpia += f" {VERDE}{elemento}{RESET}"  # Tocados y hundidos en verde
                 else:
